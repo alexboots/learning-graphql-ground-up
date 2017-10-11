@@ -1,6 +1,7 @@
 // We are instructing GraphQL 
 //  what type of data we have in our application
 const graphql = require('graphql');
+const _ = require('lodash');
 
 // Import stuff we need
 const {
@@ -8,10 +9,24 @@ const {
 
   // http://graphql.org/graphql-js/type/
   GraphQLString,
-  GraphQLInt
+  GraphQLInt,
+
+  // 
+  GraphQLSchema
+
 
 } = graphql;
 
+
+const users = [{ 
+    id: 0,
+    firstName: "My name is",
+    age: 100
+  }, {
+    id: 1,
+    firstName: "what",
+    age: 10
+  }];
 
 // We are using GraphQLObjectType to 
 //  tell GraphQL about the model of a user in our app
@@ -48,11 +63,15 @@ const RootQuery = new GraphQLObjectType({
         // parentValue = never really used lol 
         // args = has whatever is in args above ^ on it 
         //   (in this case `id`
-        
-
-
+        return _.find(users, { id: args.id })
       }
     }
   }
 });
+
+
+module.exports = new GraphQLSchema({
+  query: RootQuery
+});
+
 
