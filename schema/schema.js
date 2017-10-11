@@ -15,6 +15,17 @@ const {
   GraphQLSchema
 } = graphql;
 
+// Important to define this above company type - get to why later.
+//  Order of definition is a thing
+const CompanyType = new GraphQLObjectType({
+  name: 'Company',
+  fields: {
+    id: { type: GraphQLString },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString }
+  }
+});
+
 // We are using GraphQLObjectType to 
 //  tell GraphQL about the model of a user in our app
 const UserType = new GraphQLObjectType({
@@ -25,9 +36,23 @@ const UserType = new GraphQLObjectType({
   fields: {
     // Tells GraphQL about all the different properties 
     //  a user (or whatever) has
-    id: { type: GraphQLInt },
+    id: { type: GraphQLString },
     firstName: { type: GraphQLString },
-    age: { type: GraphQLInt }
+    age: { type: GraphQLInt },
+    company: {
+      type: CompanyType,
+      resolve(parentValue, args) {
+        const { companyId } = parentValue;
+        // So user data looks like 
+        //   parentValue { id: '3', firstName: 'Alex', age: 20, companyId: 2 }
+        // use that to grab company info from endpoint
+        return axios.get(`http://localhost:3000/companies/${companyId}`)
+          .then(response => response.data)
+
+        // We can now ask for all the company data in GraphQL query
+        //  name / description etc. 
+      }
+    }
   }
 });
 
@@ -42,7 +67,7 @@ const RootQuery = new GraphQLObjectType({
     //   I'll return you a user"
     user: {
       type: UserType,
-      args: { id: { type: GraphQLInt } },
+      args: { id: { type: GraphQLString } },
       // resolve: 
       //  "Oh you're looking for a user with ID of 23
       //   Ok, i'll try and go find it"
