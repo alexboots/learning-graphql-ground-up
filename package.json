@@ -1,7 +1,7 @@
 {
-  "name": "join-nothing",
+  "name": "learning-graphql-ground-up",
   "version": "1.0.0",
-  "description": "join nothing",
+  "description": "Jumping off point for other projects",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
