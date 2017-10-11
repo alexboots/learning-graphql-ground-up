@@ -18,7 +18,7 @@ const {
 } = graphql;
 
 
-const users = [{ 
+const someDataStorageThing = [{ 
     id: 0,
     firstName: "My name is",
     age: 100
@@ -38,7 +38,7 @@ const UserType = new GraphQLObjectType({
   fields: {
     // Tells GraphQL about all the different properties 
     //  a user (or whatever) has
-    id: { type: GraphQLString },
+    id: { type: GraphQLInt },
     firstName: { type: GraphQLString },
     age: { type: GraphQLInt }
   }
@@ -55,7 +55,7 @@ const RootQuery = new GraphQLObjectType({
     //   I'll return you a user"
     user: {
       type: UserType,
-      args: { id: { type: GraphQLString } },
+      args: { id: { type: GraphQLInt } },
       // resolve: 
       //  "Oh you're looking for a user with ID of 23
       //   Ok, i'll try and go find it"
@@ -63,7 +63,7 @@ const RootQuery = new GraphQLObjectType({
         // parentValue = never really used lol 
         // args = has whatever is in args above ^ on it 
         //   (in this case `id`
-        return _.find(users, { id: args.id })
+        return _.find(someDataStorageThing, { id: args.id })
       }
     }
   }
