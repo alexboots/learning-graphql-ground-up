@@ -28,3 +28,31 @@ const UserType = new GraphQLObjectType({
     age: { type: GraphQLInt }
   }
 });
+
+// Give GraphQL an 'entry point' to the data 
+//  Allows GraphQL to jump and land on a specific node in our data
+const RootQuery = new GraphQLObjectType({
+  // 
+  name: 'RootQueryType',
+  fields: {
+    // "You can ask me about users in the application IF
+    //   you give me the ID of the user you're looking for
+    //   I'll return you a user"
+    user: {
+      type: UserType,
+      args: { id: { type: GraphQLString } },
+      // resolve: 
+      //  "Oh you're looking for a user with ID of 23
+      //   Ok, i'll try and go find it"
+      resolve(parentValue, args) {
+        // parentValue = never really used lol 
+        // args = has whatever is in args above ^ on it 
+        //   (in this case `id`
+        
+
+
+      }
+    }
+  }
+});
+
