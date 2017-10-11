@@ -1,7 +1,7 @@
 // We are instructing GraphQL 
 //  what type of data we have in our application
 const graphql = require('graphql');
-const _ = require('lodash');
+const axios = require('axios');
 
 // Import stuff we need
 const {
@@ -11,22 +11,9 @@ const {
   GraphQLString,
   GraphQLInt,
 
-  // 
+  // used to make the schema
   GraphQLSchema
-
-
 } = graphql;
-
-
-const someDataStorageThing = [{ 
-    id: 0,
-    firstName: "My name is",
-    age: 100
-  }, {
-    id: 1,
-    firstName: "what",
-    age: 10
-  }];
 
 // We are using GraphQLObjectType to 
 //  tell GraphQL about the model of a user in our app
@@ -62,8 +49,14 @@ const RootQuery = new GraphQLObjectType({
       resolve(parentValue, args) {
         // parentValue = never really used lol 
         // args = has whatever is in args above ^ on it 
-        //   (in this case `id`
-        return _.find(someDataStorageThing, { id: args.id })
+        //   (in this case `id`)
+
+        // We should always be returning 
+        //  a promise from this resolve functon
+                          // set up json-server with data for this
+        return axios.get(`http://localhost:3000/users/${args.id}`)
+          // axios returns stuff in { data: { blah:{} } } object, need to get it outta there
+          .then(response => response.data)
       }
     }
   }
