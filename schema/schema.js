@@ -15,7 +15,10 @@ const {
   GraphQLSchema,
 
   // See comment in CompanyType => users => resolve
-  GraphQLList
+  GraphQLList,
+
+  // Makes a field required when you're doing Mutations
+  GraphQLNonNull
 } = graphql;
 
 // Important to define this above company type
@@ -135,8 +138,49 @@ const RootQuery = new GraphQLObjectType({
   })
 });
 
+/*
+Example mutation:
+
+mutation {
+  addUser(firstName: "asdasdasd", age: 40) {
+    # You can say what you expect to get back
+    id,
+    firstName,
+    age
+  }
+}
+*/
+
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    // Fields in mutation describe the operation - not strict nameing
+    addUser: {
+      // Must have these three things (type, args, resolve)!
+      type: UserType, // Referes to the type of data we will eventually 'return'.
+              //  The data you are operating on won't always be the same
+              //  type of data you are returning (is here though)
+      args: {
+        // GraphQLNonNull = required field
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: new GraphQLNonNull(GraphQLInt) },
+        companyId: { type: GraphQLString }
+      },
+      resolve (parentValue, args) {
+        const { firstName, age } = args;
+        return axios.post('http://localhost:3000/users/', {
+          firstName, 
+          age
+        })
+        .then(request => request.data);
+      }
+    }
+  }
+});
+
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation
 });
 
 // Notes:
@@ -199,5 +243,17 @@ fragment companyDetails on Company {
     }
   }
 }
+
+*/
+
+
+//// Mutations | Changing data on the server ~!! GraphQL's CUD of CRUD
+// ===========
+/*
+  Similar to how RootQuery is setup/
+
+  
+
+  
 
 */
