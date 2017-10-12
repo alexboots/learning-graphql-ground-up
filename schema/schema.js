@@ -15,7 +15,7 @@ const {
   GraphQLSchema
 } = graphql;
 
-// Important to define this above company type - get to why later.
+// Important to define this above company type
 //  Order of definition is a thing
 const CompanyType = new GraphQLObjectType({
   name: 'Company',
@@ -83,13 +83,30 @@ const RootQuery = new GraphQLObjectType({
           // axios returns stuff in { data: { blah:{} } } object, need to get it outta there
           .then(response => response.data)
       }
+    },
+    // Can add more stuff to the Root Query so you can 
+    //  now access company directly via GraphQL as well
+    company: {
+      type: CompanyType,
+      args: { id: { type: GraphQLString } },
+      resolve(parentValue, args) {
+        console.log('args.id', args.id);
+        return axios.get(`http://localhost:3000/companies/${args.id}`)
+          .then(response => response.data)
+      }
     }
   }
 });
-
 
 module.exports = new GraphQLSchema({
   query: RootQuery
 });
 
+// Notes:
+// Best to think of schema as a bunch of 
+//  functions that return references to other objects in our graph
+// We can think of each of the edges in our graph as a resolve function
+
+// Node = peice of data
+//  they have resolve functions that can go grab more data from other nodes
 
