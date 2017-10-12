@@ -174,6 +174,25 @@ const mutation = new GraphQLObjectType({
         })
         .then(request => request.data);
       }
+    },
+    /* 
+    mutation {
+      deleteUser(id: 2) {
+        id # GraphQL exepcts to get back some usefull data, 
+           #  will be null if server doesn't send anything back /shrug
+      }
+    }
+    */
+    deleteUser: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLInt) }
+      },
+      resolve (parentValue, args) {
+        const { id } = args;
+        return axios.delete(`http://localhost:3000/users/${id}`)
+          .then(request => request.data);
+      }
     }
   }
 });
