@@ -193,6 +193,29 @@ const mutation = new GraphQLObjectType({
         return axios.delete(`http://localhost:3000/users/${id}`)
           .then(request => request.data);
       }
+    },
+    editUser: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        firstName: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        companyId: { type: GraphQLString }
+      },
+      resolve(parentValue, args) {
+        const { id, firstName, age, companyId } = args;
+
+        // Remember:
+        // put = completely replace object w what you send
+        //   this could blow away whatever you don't pass. Its overwriting.
+        // patch = update only the bits of data you pass
+        return axios.patch(`http://localhost:3000/users/${id}`, {
+          firstName,
+          age,
+          companyId
+        })
+        .then(request => request.data);
+      }
     }
   }
 });
@@ -271,8 +294,5 @@ fragment companyDetails on Company {
 /*
   Similar to how RootQuery is setup/
 
-  
-
-  
-
+  Yeah code is self explanatory
 */

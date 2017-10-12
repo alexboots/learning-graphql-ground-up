@@ -3,8 +3,8 @@
     {
       "id": "3",
       "firstName": "Alex",
-      "age": 20,
-      "companyId": 2
+      "age": 31,
+      "companyId": "1"
     },
     {
       "id": "4",
